@@ -2,17 +2,7 @@ from django.db import models
 from .choices import MATCH_STATE_CHOICES, CANDIDATE_INTEREST_CHOICES, JOB_STATE_CHOICES
 
 
-class Match(models.Model):
-    state = models.CharField(max_length=20, choices=MATCH_STATE_CHOICES, default='in_progress')
-    candidate_interest = models.CharField(max_length=20, choices=CANDIDATE_INTEREST_CHOICES, default='interested')
-    create_at = models.DateField(auto_now_add=True)
-
-    def __str__(self):
-        return self.state + " " + self.candidate_interest
-
-
 class Job(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=100, null=True, blank=True, verbose_name="title")
     state = models.CharField(max_length=20, choices=JOB_STATE_CHOICES, default='open')
 
@@ -21,13 +11,23 @@ class Job(models.Model):
 
 
 class Candidate(models.Model):
-    match = models.ForeignKey(Match, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=100, null=True, blank=True, verbose_name="name")
     email = models.EmailField(max_length=100, null=True, blank=True)
     create_at = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.name + " " + self.email
+
+
+class Match(models.Model):
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True, related_name="candidate_source")
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, null=True, related_name="job_source")
+    state = models.CharField(max_length=20, choices=MATCH_STATE_CHOICES, default='in_progress')
+    candidate_interest = models.CharField(max_length=20, choices=CANDIDATE_INTEREST_CHOICES, default='interested')
+    create_at = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.state + " " + self.candidate_interest
 
 
 class Event(models.Model):
