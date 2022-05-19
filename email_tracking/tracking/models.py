@@ -1,4 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+
+import jsonfield
+import datetime
 from .choices import MATCH_STATE_CHOICES, CANDIDATE_INTEREST_CHOICES, JOB_STATE_CHOICES
 
 
@@ -32,12 +36,16 @@ class Match(models.Model):
 
 class Event(models.Model):
     type = models.CharField(max_length=100, null=True, blank=True, verbose_name="event_type")
-    message_id = models.CharField(max_length=250, null=True, blank=True, verbose_name="event_msg_id")
-    match_id = models.CharField(max_length=250, null=True, blank=True, verbose_name="event_match_id")
-    create_at = models.DateField(auto_now_add=True)
+    metadata_information = jsonfield.JSONField()
+    create_at = models.DateField(default=datetime.date.today())
 
     def __str__(self):
         return "Msg Type " + str(self.type)
+
+    def clean(self):
+        if self.create_at > datetime.date.today():  # 🖘 raise error if greater than
+            raise ValidationError("The date cannot be in the past!")
+        return self.create_at
 
 
 class Email(models.Model):
