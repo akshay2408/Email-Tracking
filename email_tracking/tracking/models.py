@@ -1,7 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-
-import jsonfield
+from django.contrib.postgres.fields import JSONField
 import datetime
 from .choices import MATCH_STATE_CHOICES, CANDIDATE_INTEREST_CHOICES, JOB_STATE_CHOICES
 
@@ -36,7 +35,7 @@ class Match(models.Model):
 
 class Event(models.Model):
     type = models.CharField(max_length=100, null=True, blank=True, verbose_name="event_type")
-    metadata_information = jsonfield.JSONField()
+    metadata_information = JSONField()
     create_at = models.DateField(default=datetime.date.today())
 
     def __str__(self):

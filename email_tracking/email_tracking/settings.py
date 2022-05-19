@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-7%o6bl!o&6ukf*h-sue7e+p0z1bxudnthaf=fk6b6u1$5$a_sj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -37,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'tracking',
 ]
 
@@ -78,10 +77,10 @@ WSGI_APPLICATION = 'email_tracking.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'emailtracking',
+        'NAME': 'email_tracking_db_1',
         'USER': 'emailtrackinguser',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
